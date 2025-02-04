@@ -1,14 +1,16 @@
 FROM ubuntu:24.04
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-ARG ARDUPILOT_VERSION
-RUN apt update
+# Set default ArduPilot version and make it configurable
+ARG ARDUPILOT_VERSION="master"
+ENV ARDUPILOT_VERSION=${ARDUPILOT_VERSION}
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Configure the venv binaries (python, pip) to be the first in the PATH, 
 # so that waf (and anything else) will use it instead of default system pthon.
 ENV HOME=/root
 ENV VENV=$HOME/venv-ardupilot
-RUN uv venv --python 3.13 --no-project $VENV
+RUN uv venv --python 3.12 --no-project $VENV
 ENV PATH="$VENV/bin:$PATH"
 # Add ~/.local/bin to PATH to allow mavproxy.py to be found after it's installed
 ENV PATH="$PATH:$HOME/.local/bin"
@@ -16,7 +18,8 @@ ENV PATH="$PATH:$HOME/.local/bin"
 COPY ./scripts/install_ardupilot_sitl_apt_dependencies.sh .
 RUN ./install_ardupilot_sitl_apt_dependencies.sh
 
-RUN git clone --branch ${ARDUPILOT_VERSION} --depth 1 --recurse-submodules https://github.com/ArduPilot/ardupilot.git $HOME/ardupilot
+#RUN git clone --branch ${ARDUPILOT_VERSION} --depth 1 --recurse-submodules https://github.com/ArduPilot/ardupilot.git $HOME/ardupilot
+RUN git clone --depth 1 --recurse-submodules https://github.com/ArduPilot/ardupilot.git $HOME/ardupilot
 WORKDIR $HOME/ardupilot
 
 ## Build ardupilot
