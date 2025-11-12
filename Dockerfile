@@ -1,6 +1,6 @@
 FROM ardupilot/ardupilot-dev-base
 
-ARG COPTER_TAG=Copter-4.5.7
+ARG COPTER_TAG=master
 
 # install git 
 RUN apt-get update && apt-get install -y git; git config --global url."https://github.com/".insteadOf git://github.com/
@@ -24,7 +24,7 @@ RUN apt-get install -y sudo lsb-release tzdata
 # Continue build instructions from https://github.com/ArduPilot/ardupilot/blob/master/BUILD.md
 RUN ./waf distclean
 RUN ./waf configure --board sitl
-RUN ./waf copter
+RUN ./waf plane
 
 # TCP 5760 is what the sim exposes by default
 EXPOSE 5760/tcp

@@ -101,3 +101,10 @@ ArduPlane: gazebo-zephyr|CRRCSim|last_letter|plane-
     tailsitter|plane-dspoilers|quadplane-tri
     |quadplane-cl84|jsbsim
 ```
+
+
+## Installation commands
+```
+cd ardupilot-sitl-docker
+docker build -t ardupilot_sitl:plane
+```
